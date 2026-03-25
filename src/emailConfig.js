@@ -17,7 +17,7 @@ export const EMAIL_CONFIG = {
     PUBLIC_KEY: 'YOUR_PUBLIC_KEY',
 
     // The email address where form submissions should be sent
-    TO_EMAIL: 'your-email@example.com'
+    TO_EMAIL: 'jyaruel@vanuatu.gov.vu'
 };
 
 // Template variables that will be sent to EmailJS:
