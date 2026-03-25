@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import emailjs from '@emailjs/browser';
+import { EMAIL_CONFIG } from './emailConfig';
 import './RequestForm.css';
 
 function RequestForm() {
@@ -16,6 +18,9 @@ function RequestForm() {
         additionalInfo1: '',
         additionalInfo2: ''
     });
+
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [submitMessage, setSubmitMessage] = useState({ type: '', text: '' });
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -35,10 +40,73 @@ function RequestForm() {
         }));
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log('Form submitted:', formData);
-        alert('Form submitted successfully! Check console for details.');
+        setIsSubmitting(true);
+        setSubmitMessage({ type: '', text: '' });
+
+        // Prepare email template parameters
+        const templateParams = {
+            to_email: EMAIL_CONFIG.TO_EMAIL,
+            from_name: formData.fullName,
+            from_email: formData.emailAddress,
+            institution: formData.institution,
+            address: formData.address,
+            phone: formData.phoneNumber,
+            information_type: formData.informationType,
+            request_type: formData.requestType,
+            purpose: formData.purposeOfRequest.join(', '),
+            date_requested: formData.dateRequested,
+            date_required: formData.dateRequired,
+            additional_info_1: formData.additionalInfo1,
+            additional_info_2: formData.additionalInfo2,
+            subject: `New Information Request from ${formData.fullName}`
+        };
+
+        try {
+            // Send email using EmailJS
+            await emailjs.send(
+                EMAIL_CONFIG.SERVICE_ID,
+                EMAIL_CONFIG.TEMPLATE_ID,
+                templateParams,
+                EMAIL_CONFIG.PUBLIC_KEY
+            );
+
+            setSubmitMessage({
+                type: 'success',
+                text: 'Your request has been submitted successfully! You will receive a confirmation email shortly.'
+            });
+
+            // Reset form after successful submission
+            setFormData({
+                fullName: '',
+                institution: '',
+                address: '',
+                phoneNumber: '',
+                emailAddress: '',
+                informationType: '',
+                requestType: '',
+                purposeOfRequest: [],
+                dateRequested: '',
+                dateRequired: '',
+                additionalInfo1: '',
+                additionalInfo2: ''
+            });
+
+            // Clear success message after 5 seconds
+            setTimeout(() => {
+                setSubmitMessage({ type: '', text: '' });
+            }, 5000);
+
+        } catch (error) {
+            console.error('Error sending email:', error);
+            setSubmitMessage({
+                type: 'error',
+                text: 'There was an error submitting your request. Please try again or contact us directly.'
+            });
+        } finally {
+            setIsSubmitting(false);
+        }
     };
 
     return (
@@ -284,8 +352,20 @@ function RequestForm() {
                     </div>
                 </section>
 
+                {submitMessage.text && (
+                    <div className={`submit-message ${submitMessage.type}`}>
+                        {submitMessage.text}
+                    </div>
+                )}
+
                 <div className="form-actions">
-                    <button type="submit" className="submit-button">Submit Request</button>
+                    <button
+                        type="submit"
+                        className="submit-button"
+                        disabled={isSubmitting}
+                    >
+                        {isSubmitting ? 'Sending...' : 'Submit Request'}
+                    </button>
                 </div>
             </form>
         </div>

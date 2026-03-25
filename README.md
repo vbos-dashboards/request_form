@@ -8,12 +8,16 @@ A responsive React-based form application for submitting information requests. B
 
 ## Features
 
+- **Email Integration**: Form submissions are sent directly to a specified email address via EmailJS
 - **Contact Information Section**: Collect user's full name, institution/company, address, phone number, and email
 - **Information Request Section**: Radio buttons to specify the type of information needed
 - **Schedule Request Section**: Select online or physical request type
 - **Purpose Selection**: Multiple checkbox options for request purposes (Research Report, Data Analysis, Higher Proposal, Planning Support, Presentation Support)
 - **Date Fields**: Request date and required date inputs
 - **Additional Information**: Two text areas for optional comments and special requests
+- **Form Validation**: Required fields and proper input types
+- **Loading States**: Visual feedback during form submission
+- **Success/Error Messages**: Clear feedback after submission
 - **Responsive Design**: Works seamlessly on desktop, tablet, and mobile devices
 - **Modern UI**: Clean, professional interface with gradient background and smooth interactions
 
@@ -21,8 +25,21 @@ A responsive React-based form application for submitting information requests. B
 
 - **React 19.2.4**: Frontend framework
 - **Vite 8.0.2**: Build tool and dev server
+- **EmailJS**: Email service for form submissions
 - **CSS3**: Custom styling with responsive design
 - **GitHub Pages**: Hosting platform
+
+## Email Configuration
+
+**⚠️ IMPORTANT**: Before the form can send emails, you need to configure EmailJS.
+
+See the detailed setup guide: [EMAILJS_SETUP.md](EMAILJS_SETUP.md)
+
+Quick steps:
+1. Create a free account at [EmailJS](https://www.emailjs.com/)
+2. Add an email service (Gmail, Outlook, etc.)
+3. Create an email template
+4. Update `src/emailConfig.js` with your credentials
 
 ## Local Development
 
